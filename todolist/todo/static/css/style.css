@@ -1,0 +1,101 @@
+
+* {
+    box-sizing: border-box;
+}
+
+
+main {
+    width: 300px;
+
+    margin: 0 auto;
+
+    background-color: blueviolet;
+}
+
+/* Deletion mode switch button */
+
+.del_mode {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.del_mode_button {
+    width: 30px;
+    height: 30px;
+    background-color: yellowgreen;
+}
+
+/* H1 */
+
+h1 {
+    text-align: center;
+}
+
+/* form */
+
+.entry_zone, .tasklist {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Entry Zone */
+.entry_zone {
+    background-color: greenyellow;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.text_entry_box {
+    width: 78%;
+}
+
+.text_entry {
+    width: 100%;
+}
+
+.add_box {
+    width: 11%;
+    display: flex;
+    justify-content: flex-end;
+    background-color: pink;
+}
+
+.add_box button {
+    width: 20px;
+}
+
+
+/* Task list */
+.task {
+    display: flex;
+}
+
+.checkbox_box {
+    width: 11%;
+    display: flex;
+    justify-content: center;
+    background-color: yellowgreen;
+
+}
+
+
+.taskname_box {
+    width: 78%;
+    background-color: peru;
+}
+
+.taskname {
+    width: 100%;
+}
+
+
+.del_task_box {
+    width: 11%;
+    background-color: brown;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.del_task {
+    width: 20px;    
+}

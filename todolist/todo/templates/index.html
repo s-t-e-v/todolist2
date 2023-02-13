@@ -5,17 +5,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Todo App</h1>
+    <main>
+        <div class="del_mode">
+            <div class="del_mode_button">
+                <a href="#">del</a>
+            </div>
+        </div>
 
-    <ul>
-        {% for t in todo %}
 
-            <li>Checkstate: {{ t.checkstate }} - Taskname: {{ t.taskname }}</li>
+        <h1>Todo App</h1>
+    
+    
+        <form>
+            <div class="entry_zone">
+                <div class="text_entry_box">
+                    <input class="text_entry" type="text">
+                </div>
+                <div class="add_box">
+                    <button>+</button>
+                </div>
+            </div>
+            <div class="tasklist">
+                {% for t in todo %}
+    
+                <div class="task" id="task_{{t.id}}">
+                    <div class="checkbox_box">
+                        <input type="checkbox" class="checkbox" name="checkbox" id="checkbox_{{t.id}}" {% if t.checkstate %} checked {% else %} {% endif %}>
+                    </div>
+                    <div class="taskname_box">
+                        <input type="text" class="taskname" id="taskname_{{t.id}}" value="{{t.taskname}}">
+                    </div>
+                    <div class="del_task_box">
+                        <button class="del_task" id="delete_{{t.id}}">-</button>
+                    </div>
+                </div>
+                    
+                {% endfor %}
+            </div>
+    
+        </form>
 
-        {% endfor %}
-    </ul>
+    </main>
+
     
 </body>
 </html>
