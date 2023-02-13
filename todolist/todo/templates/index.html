@@ -9,7 +9,13 @@
 <body>
     <h1>Todo App</h1>
 
-    
+    <ul>
+        {% for t in todo %}
+
+            <li>Checkstate: {{ t.checkstate }} - Taskname: {{ t.taskname }}</li>
+
+        {% endfor %}
+    </ul>
     
 </body>
 </html>
