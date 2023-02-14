@@ -194,6 +194,8 @@ async function add() {
             // Assembly
             checkbox_box.appendChild(input_checkbox);
 
+            
+
         // taskname_box
         taskname_box = document.createElement("div");
             taskname_box.className = "taskname_box";
@@ -207,6 +209,7 @@ async function add() {
 
             // Assembly
             taskname_box.appendChild(input_taskname);
+
 
 
         // del_task_box
@@ -269,6 +272,24 @@ async function checkstate_update(event) {
         console.error(error);
     }
 
+    // Frontend update
+    let task_id = id.replace('checkbox_', 'taskname_');
+    console.log(task_id);
+    let taskname = document.getElementById(task_id);
+
+    if (checkstate == true) {
+        console.log('line-through');
+        taskname.style.textDecoration = 'line-through';
+    }
+    else {
+        console.log('none');
+        taskname.style.textDecoration = 'none';
+    }
+
+}
+
+async function taskname_update (event){
+    console.log("tadk_updating");
 }
 
 
@@ -284,6 +305,21 @@ async function checkstate_update(event) {
 
     // Set elements
 
+        // taskname_list
+        let taskname_list = document.getElementsByClassName("taskname");
+
+        for (let i = 0; i < taskname_list.length; i++) { // Loop over the collection of elements and assign event listener
+            taskname_list[i].addEventListener("change", taskname_update);
+            
+
+            // line-through
+            let check_id = taskname_list[i].id.replace('taskname_', 'checkbox_');
+            let checked = document.getElementById(check_id).checked;
+
+            if (checked) {
+                taskname_list[i].style.textDecoration = 'line-through';
+            }
+        }
         // del_task buttons
         let del_task_buttons = document.getElementsByClassName("del_task");
 
