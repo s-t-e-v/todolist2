@@ -1,6 +1,10 @@
 from django.shortcuts import render
 
 from .models import Todo
+from django.http import JsonResponse
+
+
+import json
 # Create your views here.
 
 def index(request):
@@ -10,3 +14,18 @@ def index(request):
     context = {"todo": todo}
 
     return render(request, 'index.html', context)
+
+
+def add(request):
+
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        taskname = body.get('taskname', '')
+        newtask = Todo.objects.create(checkstate=False, taskname=taskname)
+        return JsonResponse({'sucess': True, 'id': newtask.id})
+    else:
+        return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
+    
+def delete(request):
+
+    pass

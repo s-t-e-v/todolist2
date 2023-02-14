@@ -1,13 +1,19 @@
 // Functions
 
-function add() {
-
-    let text_entry = document.getElementById("text_entry");
-
-    if (text_entry.value != "") {
-        console.log("adding elements");
-
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
     }
+    return cookieValue;
 }
 
 function switch_mode() {
@@ -97,6 +103,106 @@ function switch_mode() {
 function del_task() {
     console.log("Deleting task");
 }
+
+
+async function add() {
+
+    let text_entry = document.getElementById("text_entry");
+
+    if (text_entry.value == "") {
+        return 0;
+    }
+
+    console.log("adding elements");    
+
+
+    try {
+      // Database update
+      const response = await fetch('add/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "X-CSRFToken": getCookie('csrftoken'),
+        },
+        body: JSON.stringify({"taskname": text_entry.value}),
+      });
+      const data = await response.json();
+
+      // Do something with the data
+      console.log(data);
+
+
+
+      // Frontend update
+      takslist = document.getElementById("tasklist");
+      task = document.createElement("div");
+        task.className = "task";
+        task.id = "task_" + data["id"];
+
+        // check_box div
+        checkbox_box = document.createElement("div");
+            checkbox_box.className = "checkbox_box";
+
+            // Input checkbox attributes
+            input_checkbox = document.createElement("input");
+                input_checkbox.className = "checkbox";
+                input_checkbox.type = "checkbox";
+                input_checkbox.name = "checkbox";
+                input_checkbox.id = "checkbox_" + data["id"];
+
+            
+            // Assembly
+            checkbox_box.appendChild(input_checkbox);
+
+        // taskname_box
+        taskname_box = document.createElement("div");
+            taskname_box.className = "taskname_box";
+
+            // input text attributes
+            input_taskname = document.createElement("input");
+                input_taskname.className = "taskname";
+                input_taskname.type = "text";
+                input_taskname.id = "taskname_" + data["id"];
+                input_taskname.value = text_entry.value;
+
+            // Assembly
+            taskname_box.appendChild(input_taskname);
+
+
+        // del_task_box
+        del_task_box = document.createElement("div");
+            del_task_box.className = "del_task_box";
+
+            // del button attributes
+            del_task_button = document.createElement("button");
+                del_task_button.className = "del_task";
+                del_task_button.id = "delete_" + data["id"];
+                del_task_button.hidden = true;
+                del_task_button.innerHTML = "-";
+            
+            // Assembly
+            del_task_box.appendChild(del_task_button);
+
+        // Task child element assembly
+
+        task.appendChild(checkbox_box);
+        task.appendChild(taskname_box);
+        task.appendChild(del_task_box);
+
+      takslist.appendChild(task); // add new task front end
+
+      // clear entry bar
+      text_entry.value = "";
+
+
+    } catch (error) {
+      console.error(error);
+    }
+}
+
+
+
+
 
 // Event listener attachment
 

@@ -78,7 +78,7 @@ h1 {
     text-align: center;
 }
 
-.entry_zone, .tasklist {
+.entry_zone, #tasklist {
     width: 80%;
     margin: 0 auto;
 }
