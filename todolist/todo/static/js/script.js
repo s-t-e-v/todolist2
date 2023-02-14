@@ -191,10 +191,11 @@ async function add() {
                 input_checkbox.id = "checkbox_" + data["id"];
 
             
+            // Event listener
+            input_checkbox.addEventListener("change", checkstate_update);
+
             // Assembly
             checkbox_box.appendChild(input_checkbox);
-
-            
 
         // taskname_box
         taskname_box = document.createElement("div");
@@ -206,6 +207,10 @@ async function add() {
                 input_taskname.type = "text";
                 input_taskname.id = "taskname_" + data["id"];
                 input_taskname.value = text_entry.value;
+
+
+            // Event listener
+            input_taskname.addEventListener("change", taskname_update);
 
             // Assembly
             taskname_box.appendChild(input_taskname);
@@ -222,6 +227,10 @@ async function add() {
                 del_task_button.id = "delete_" + data["id"];
                 del_task_button.hidden = true;
                 del_task_button.innerHTML = "-";
+
+            // Event listener
+            del_task_button.addEventListener("click", del_task);
+
             
             // Assembly
             del_task_box.appendChild(del_task_button);
