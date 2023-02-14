@@ -240,7 +240,36 @@ async function add() {
     }
 }
 
+async function checkstate_update(event) {
 
+    let id = this.id;
+    let checkstate = document.getElementById(id).checked;
+
+    console.log("Updating checkstate");
+
+    try {
+
+    // Database update
+    const response = await fetch('checkstateup/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({"checkstate": checkstate, "id": id.replace('checkbox_', '')}),
+
+    });
+    const data = await response.json();    
+
+    // Do something with the data
+    console.log(data);
+    
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
 
 
 
@@ -255,11 +284,22 @@ async function add() {
 
     // Set elements
 
-    let del_task_buttons = document.getElementsByClassName("del_task");
+        // del_task buttons
+        let del_task_buttons = document.getElementsByClassName("del_task");
 
-    for (let i = 0; i < del_task_buttons.length; i++) { // Loop over the collection of elements and assign event listener
-        del_task_buttons[i].addEventListener("click", del_task);
-    }
+        for (let i = 0; i < del_task_buttons.length; i++) { // Loop over the collection of elements and assign event listener
+            del_task_buttons[i].addEventListener("click", del_task);
+            console.log(del_task_buttons[i].id);
+        }
+
+        // checkboxes
+        let checkboxes = document.getElementsByClassName("checkbox");
+
+
+        for (let i = 0; i < checkboxes.length; i++) { // Loop over the collection of elements and assign event listener
+            checkboxes[i].addEventListener("change", checkstate_update);
+            console.log(checkboxes[i].id);
+        }
 
 
 

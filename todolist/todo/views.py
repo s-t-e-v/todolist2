@@ -37,3 +37,20 @@ def delete(request):
     else:
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
     
+
+def checkstate_update(request):
+
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        id = body.get('id', '')
+        checkstate = body.get('checkstate', '')
+
+        task = Todo.objects.get(id=id)
+        task.checkstate = checkstate
+        task.save()
+
+        return JsonResponse({'sucess': True})
+    else:
+        return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
+    
+    
