@@ -13,25 +13,70 @@ main {
 }
 
 /* Deletion mode switch button */
-
 .del_mode {
     display: flex;
     justify-content: flex-end;
+
+    background-color: bisque;
+
+    height: 30px;
+
 }
 
-.del_mode_button {
+.del_mode_box {
     width: 30px;
     height: 30px;
     background-color: yellowgreen;
+
+    position: relative;
 }
+
+    /* Off state */
+    .del_mode_icon {
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        
+
+        position: absolute;
+        top: 5px;
+        left: 5px;
+
+        background-image: url('../img/off.svg');
+        background-size: cover;
+
+        z-index: 1;
+    }
+
+#trash {
+
+    position: absolute;
+    top: 5px;
+    left: 5px;
+
+    box-sizing: border-box;
+    margin: 0;
+
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+
+    cursor: pointer;
+
+    z-index: 2;
+}
+
+    /* On state */
+    #trash:checked + .del_mode_icon {
+        background-image: url('../img/on.svg');
+    }
+
 
 /* H1 */
 
 h1 {
     text-align: center;
 }
-
-/* form */
 
 .entry_zone, .tasklist {
     width: 80%;
@@ -49,7 +94,7 @@ h1 {
     width: 78%;
 }
 
-.text_entry {
+.text_entry_box #text_entry {
     width: 100%;
 }
 
