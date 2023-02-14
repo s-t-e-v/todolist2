@@ -28,4 +28,12 @@ def add(request):
     
 def delete(request):
 
-    pass
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        id = body.get('id', '')
+
+        Todo.objects.filter(id=id).delete()
+        return JsonResponse({'sucess': True})
+    else:
+        return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
+    

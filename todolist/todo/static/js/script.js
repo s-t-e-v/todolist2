@@ -100,14 +100,54 @@ function switch_mode() {
     }
 }
 
-function del_task() {
+async function del_task(event) {
+
+    let id = this.id;
     console.log("Deleting task");
+    console.log("id: " + id)
+
+    try {
+        // Database update
+        const response = await fetch('delete/', {
+            method: 'POST',
+            headers:  {
+                'Content-Type': 'application/json',
+                "X-CSRFToken": getCookie('csrftoken'),
+            },
+            body: JSON.stringify({"id": id.replace('delete_', '')}),
+
+        });
+        const data = await response.json();
+
+
+        // Do something with the data
+        console.log(data);
+
+        // Frontend update
+        console.log(id);
+        task_id = id.replace('delete_', 'task_')
+
+        document.getElementById(task_id).remove() // remove the task
+
+
+    } catch(error) {
+        console.error(error);
+    }
+
+
 }
 
 
 async function add() {
 
     let text_entry = document.getElementById("text_entry");
+    let deletion_mode = document.getElementById("trash").checked;
+
+    console.log("deletion mode: " + deletion_mode)
+
+    if (deletion_mode)  {
+        return 0;
+    }
 
     if (text_entry.value == "") {
         return 0;
