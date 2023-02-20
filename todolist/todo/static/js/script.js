@@ -35,6 +35,8 @@ function switch_mode() {
 
     // Individual elements retrieval
 
+        // retrieve undo button
+        let undo = document.getElementById("undo");
         // retrieve entry bar
         let entrybar = document.getElementById("text_entry");
         // retrieve big button
@@ -69,6 +71,9 @@ function switch_mode() {
             // Change button to "-"
             bigbutton.innerHTML = "-";
 
+            // Display undo button
+            undo.hidden = false;
+
 
     }
     else {
@@ -98,6 +103,9 @@ function switch_mode() {
 
             // Change button to "+"
             bigbutton.innerHTML = "+";
+
+            // Hide undo button
+            undo.hidden = true;
 
     }
 }
