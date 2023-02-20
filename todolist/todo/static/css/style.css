@@ -6,7 +6,7 @@
 
 /* Main */
 main {
-    width: 300px;
+    width: 320px;
 
     margin: 0 auto;
 
@@ -20,29 +20,23 @@ main {
 
         background-color: bisque;
 
-        height: 30px;
-
     }
 
         /* Deletion mode box */
         .del_mode_box {
-            width: 30px;
-            height: 30px;
+            width: 34px;
+            height: 34px;
             background-color: yellowgreen;
 
             position: relative;
+            top: 5px;
         }
 
         /* Off state */
         .del_mode_icon {
-            width: 20px;
-            height: 20px;
+            width: 100%;
+            height: 100%;
             background-color: green;
-            
-
-            position: absolute;
-            top: 5px;
-            left: 5px;
 
             background-image: url('../img/off.svg');
             background-size: cover;
@@ -54,14 +48,12 @@ main {
         #trash {
 
             position: absolute;
-            top: 5px;
-            left: 5px;
 
             box-sizing: border-box;
             margin: 0;
 
-            width: 20px;
-            height: 20px;
+            width: 100%;
+            height: 100%;
             opacity: 0;
 
             cursor: pointer;
@@ -78,11 +70,12 @@ main {
 /* H1 */
 h1 {
     text-align: center;
+    margin: 25px 0;
 }
 
 /* Entry zone */
 .entry_zone, #tasklist {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -90,22 +83,29 @@ h1 {
     background-color: greenyellow;
     display: flex;
     justify-content: flex-end;
+    gap: 16px;
+
+    margin-bottom: 5px;
 }
 
     /* Text input container */
     .text_entry_box {
-        width: 78%;
+        width: 220px;
+        height: 34px;
     }
 
         /* text_entry input*/
         .text_entry_box #text_entry {
             width: 100%;
+            height: 100%;
+
+            font-size: 1.5em;
         }
 
     
     /* Big button container */
     .add_box {
-        width: 11%;
+        width: 34px;
         display: flex;
         justify-content: flex-end;
         background-color: pink;
@@ -113,7 +113,10 @@ h1 {
 
         /* Big button */
         #big_button {
-            width: 20px;
+            width: 100%;
+            height: 100%;
+
+            font-size: 1.5em;
         }
 
 
@@ -122,20 +125,29 @@ h1 {
         /* Task */
         .task {
             display: flex;
+            gap: 16px;
+            margin-bottom: 5px;
         }
 
             /* Checkboc */
             .checkbox_box {
-                width: 11%;
+                width: 34px;
+                height: 34px;
                 display: flex;
-                justify-content: center;
                 background-color: yellowgreen;
 
             }
 
-            /* Task nmae container */
+                .checkbox {
+                    width: 100%;
+                    height: 100%;
+                }
+
+            /* Task name container */
             .taskname_box {
-                width: 78%;
+                width: 220px;
+                height: 34px;
+                
                 background-color: peru;
             }
 
@@ -143,17 +155,23 @@ h1 {
 
                 .taskname {
                     width: 100%;
+                    height: 100%;
+
+                    font-size: 1.5em;
                 }
 
             /* Del task button container */
             .del_task_box {
-                width: 11%;
+                width: 34px;
+                height: 34px;
                 background-color: brown;
-                display: flex;
-                justify-content: flex-end;
             }
 
                 /* del task button */
                 .del_task {
-                    width: 20px;    
+                    width: 100%;
+                    height: 100%;
+                    
+                    font-size: 1.2em;
+
                 }
