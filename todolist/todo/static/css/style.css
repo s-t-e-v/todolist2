@@ -1,9 +1,10 @@
-
 * {
     box-sizing: border-box;
+    margin: 0;
 }
 
 
+/* Main */
 main {
     width: 300px;
 
@@ -12,135 +13,147 @@ main {
     background-color: blueviolet;
 }
 
-/* Deletion mode switch button */
-.del_mode {
-    display: flex;
-    justify-content: flex-end;
+    /* Deletion mode switch button */
+    .del_mode {
+        display: flex;
+        justify-content: flex-end;
 
-    background-color: bisque;
+        background-color: bisque;
 
-    height: 30px;
+        height: 30px;
 
-}
-
-.del_mode_box {
-    width: 30px;
-    height: 30px;
-    background-color: yellowgreen;
-
-    position: relative;
-}
-
-    /* Off state */
-    .del_mode_icon {
-        width: 20px;
-        height: 20px;
-        background-color: green;
-        
-
-        position: absolute;
-        top: 5px;
-        left: 5px;
-
-        background-image: url('../img/off.svg');
-        background-size: cover;
-
-        z-index: 1;
     }
 
-#trash {
+        /* Deletion mode box */
+        .del_mode_box {
+            width: 30px;
+            height: 30px;
+            background-color: yellowgreen;
 
-    position: absolute;
-    top: 5px;
-    left: 5px;
+            position: relative;
+        }
 
-    box-sizing: border-box;
-    margin: 0;
+        /* Off state */
+        .del_mode_icon {
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            
 
-    width: 20px;
-    height: 20px;
-    opacity: 0;
+            position: absolute;
+            top: 5px;
+            left: 5px;
 
-    cursor: pointer;
+            background-image: url('../img/off.svg');
+            background-size: cover;
 
-    z-index: 2;
-}
+            z-index: 1;
+        }
 
-    /* On state */
-    #trash:checked + .del_mode_icon {
-        background-image: url('../img/on.svg');
-    }
+        /* Changing checkbox style -> invisible + pointer */
+        #trash {
+
+            position: absolute;
+            top: 5px;
+            left: 5px;
+
+            box-sizing: border-box;
+            margin: 0;
+
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+
+            cursor: pointer;
+
+            z-index: 2;
+        }
+
+        /* On state */
+        #trash:checked + .del_mode_icon {
+            background-image: url('../img/on.svg');
+        }
 
 
 /* H1 */
-
 h1 {
     text-align: center;
 }
 
+/* Entry zone */
 .entry_zone, #tasklist {
     width: 80%;
     margin: 0 auto;
 }
 
-/* Entry Zone */
 .entry_zone {
     background-color: greenyellow;
     display: flex;
     justify-content: flex-end;
 }
 
-.text_entry_box {
-    width: 78%;
-}
+    /* Text input container */
+    .text_entry_box {
+        width: 78%;
+    }
 
-.text_entry_box #text_entry {
-    width: 100%;
-}
+        /* text_entry input*/
+        .text_entry_box #text_entry {
+            width: 100%;
+        }
 
-.add_box {
-    width: 11%;
-    display: flex;
-    justify-content: flex-end;
-    background-color: pink;
-}
+    
+    /* Big button container */
+    .add_box {
+        width: 11%;
+        display: flex;
+        justify-content: flex-end;
+        background-color: pink;
+    }
 
-#big_button {
-    width: 20px;
-}
+        /* Big button */
+        #big_button {
+            width: 20px;
+        }
 
 
 /* Task list */
-.task {
-    display: flex;
-}
 
-.checkbox_box {
-    width: 11%;
-    display: flex;
-    justify-content: center;
-    background-color: yellowgreen;
+        /* Task */
+        .task {
+            display: flex;
+        }
 
-}
+            /* Checkboc */
+            .checkbox_box {
+                width: 11%;
+                display: flex;
+                justify-content: center;
+                background-color: yellowgreen;
 
+            }
 
-.taskname_box {
-    width: 78%;
-    background-color: peru;
-}
+            /* Task nmae container */
+            .taskname_box {
+                width: 78%;
+                background-color: peru;
+            }
 
-.taskname {
-    width: 100%;
-}
+                /* task name input */
 
+                .taskname {
+                    width: 100%;
+                }
 
-.del_task_box {
-    width: 11%;
-    background-color: brown;
-    display: flex;
-    justify-content: flex-end;
-}
+            /* Del task button container */
+            .del_task_box {
+                width: 11%;
+                background-color: brown;
+                display: flex;
+                justify-content: flex-end;
+            }
 
-.del_task {
-    width: 20px;    
-}
+                /* del task button */
+                .del_task {
+                    width: 20px;    
+                }
