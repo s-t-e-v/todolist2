@@ -1,3 +1,5 @@
+"use strict";
+
 // Functions
 
 function getCookie(name) {
@@ -137,8 +139,7 @@ async function del_task(event) {
 
 }
 
-
-async function add() {
+async function add(enterPressed) {
 
     let text_entry = document.getElementById("text_entry");
     let deletion_mode = document.getElementById("trash").checked;
@@ -210,7 +211,24 @@ async function add() {
 
 
             // Event listener
-            input_taskname.addEventListener("change", taskname_update);
+
+                // keyup listener
+                input_taskname.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                    enterPressed = true;
+                    event.target.blur();
+                    }
+                });
+
+                // blur listener
+                input_taskname.addEventListener('blur', async (event) => {
+                    await taskname_update(event, enterPressed);
+                    enterPressed = false;
+                });
+            
+
+
+
 
             // Assembly
             taskname_box.appendChild(input_taskname);
@@ -297,13 +315,74 @@ async function checkstate_update(event) {
 
 }
 
-async function taskname_update (event){
-    console.log("tadk_updating");
+async function taskname_update (event, enterPressed){
+
+    let id = event.target.id;
+    let taskname = document.getElementById(id);
+
+    console.log("task_updating");
+
+
+    if (enterPressed) { // Update the database
+
+        try {
+
+        // Database update
+        const response = await fetch('tasknameup/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({"newtaskname": taskname.value, "id": id.replace('taskname_','')}),
+
+        });
+        const data = await response.json();
+
+        // Do something with the data
+        console.log(data);
+
+
+        // Frontend update
+        taskname.value = data["newtaskname"]; // update the html
+
+        } catch(error) {
+            console.error(error);
+        }
+
+    }
+    else { // we retrieve the former value from the database
+
+        try {
+
+        // Database query
+        const response = await fetch(`tasknameup/?id=${id.replace('taskname_','')}`, {            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
+        const data = await response.json();
+
+        // Do something with the data
+        console.log(data);
+
+
+        // Frontend update
+        taskname.value = data["taskname"]; // set back to initial value
+
+
+        } catch(error) {
+            console.error(error);
+        }
+
+    }
 }
 
+function setupInputListener() {
 
+    let enterPressed = false;
 
-// Event listener attachment
 
     // Individual elements
 
@@ -318,7 +397,20 @@ async function taskname_update (event){
         let taskname_list = document.getElementsByClassName("taskname");
 
         for (let i = 0; i < taskname_list.length; i++) { // Loop over the collection of elements and assign event listener
-            taskname_list[i].addEventListener("change", taskname_update);
+
+            // keyup listener
+            taskname_list[i].addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                enterPressed = true;
+                event.target.blur();
+                }
+            });
+
+            // blur listener
+            taskname_list[i].addEventListener('blur', async (event) => {
+                await taskname_update(event, enterPressed);
+                enterPressed = false;
+            });
             
 
             // line-through
@@ -329,6 +421,8 @@ async function taskname_update (event){
                 taskname_list[i].style.textDecoration = 'line-through';
             }
         }
+
+
         // del_task buttons
         let del_task_buttons = document.getElementsByClassName("del_task");
 
@@ -347,4 +441,9 @@ async function taskname_update (event){
         }
 
 
+}
+
+
+// Event listener attachment
+setupInputListener()
 

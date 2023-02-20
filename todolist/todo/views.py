@@ -54,3 +54,26 @@ def checkstate_update(request):
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
     
     
+def taskname_update(request):
+
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        id = body.get('id', '')
+        newtaskname = body.get('newtaskname', '')
+
+        task = Todo.objects.get(id=id)
+        task.taskname = newtaskname
+        task.save()
+
+        return JsonResponse({'sucess': True, 'newtaskname': newtaskname})
+    elif request.method == 'GET':
+
+        task_id = request.GET.get('id', '')
+        task = Todo.objects.get(id=task_id)
+        
+        print(task.taskname)
+
+        return JsonResponse({'sucess': True, 'taskname': task.taskname})
+    else:
+        return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
+    
