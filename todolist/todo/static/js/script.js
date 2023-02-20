@@ -175,17 +175,18 @@ async function add(enterPressed) {
 
 
       // Frontend update
-      takslist = document.getElementById("tasklist");
-      task = document.createElement("div");
+      let tasklist = document.getElementById("tasklist");
+
+      let task = document.createElement("div");
         task.className = "task";
         task.id = "task_" + data["id"];
 
         // check_box div
-        checkbox_box = document.createElement("div");
-            checkbox_box.className = "checkbox_box";
+        let checkbox_box = document.createElement("div");
+        checkbox_box.className = "checkbox_box";
 
             // Input checkbox attributes
-            input_checkbox = document.createElement("input");
+            let input_checkbox = document.createElement("input");
                 input_checkbox.className = "checkbox";
                 input_checkbox.type = "checkbox";
                 input_checkbox.name = "checkbox";
@@ -199,11 +200,11 @@ async function add(enterPressed) {
             checkbox_box.appendChild(input_checkbox);
 
         // taskname_box
-        taskname_box = document.createElement("div");
+        let taskname_box = document.createElement("div");
             taskname_box.className = "taskname_box";
 
             // input text attributes
-            input_taskname = document.createElement("input");
+            let input_taskname = document.createElement("input");
                 input_taskname.className = "taskname";
                 input_taskname.type = "text";
                 input_taskname.id = "taskname_" + data["id"];
@@ -225,10 +226,6 @@ async function add(enterPressed) {
                     await taskname_update(event, enterPressed);
                     enterPressed = false;
                 });
-            
-
-
-
 
             // Assembly
             taskname_box.appendChild(input_taskname);
@@ -236,11 +233,11 @@ async function add(enterPressed) {
 
 
         // del_task_box
-        del_task_box = document.createElement("div");
+        let del_task_box = document.createElement("div");
             del_task_box.className = "del_task_box";
 
             // del button attributes
-            del_task_button = document.createElement("button");
+            let del_task_button = document.createElement("button");
                 del_task_button.className = "del_task";
                 del_task_button.id = "delete_" + data["id"];
                 del_task_button.hidden = true;
@@ -259,7 +256,7 @@ async function add(enterPressed) {
         task.appendChild(taskname_box);
         task.appendChild(del_task_box);
 
-      takslist.appendChild(task); // add new task front end
+      tasklist.appendChild(task); // add new task front end
 
       // clear entry bar
       text_entry.value = "";
@@ -387,6 +384,15 @@ function setupInputListener() {
     // Individual elements
 
     document.getElementById("big_button").addEventListener("click", add);
+
+
+    document.getElementById("text_entry").addEventListener('keyup', async (event) => {
+        if (event.key === 'Enter') {
+            enterPressed = true;
+            await add(enterPressed);
+            event.target.blur();
+        }
+    });
 
     document.getElementById("trash").addEventListener("click", switch_mode);
 
