@@ -120,6 +120,7 @@ async function del_task(target) {
     let id = target.id;
     console.log("Deleting task");
     console.log("id: " + id)
+    console.time();
 
     try {
         // Database update
@@ -134,10 +135,15 @@ async function del_task(target) {
         });
         const data = await response.json();
 
+        console.log("Response")
+        console.timeEnd();
+
 
         // Do something with the data
         console.log(data);
 
+        console.log('Front removal starts!');
+        console.time();
         // Frontend update
         console.log(id);
         let task_id = id.replace('delete_', 'task_')
@@ -148,6 +154,10 @@ async function del_task(target) {
 
             // Removal from the DOM
             document.getElementById(task_id).remove() // remove the task
+
+        console.timeEnd();
+        console.log('Front removal ends!');
+
 
 
     } catch(error) {
