@@ -2,6 +2,8 @@ from django.shortcuts import render
 
 from .models import Todo
 from django.http import JsonResponse
+from django.db import connection
+
 
 
 import json
@@ -86,7 +88,21 @@ def delete(request):
 def delete_all(request):
     """Delete all tasks.
         update_history will be called"""
-    pass
+    
+    if request.method == 'POST':
+
+        Todo.objects.all().delete()
+
+        # reset index
+
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name='todo_todo'")
+
+        return JsonResponse({'sucess': True})
+    else:
+        return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
+
+
 
 def undo(request):
     """Undo the previous action.

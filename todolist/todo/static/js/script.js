@@ -178,6 +178,10 @@ async function del_all(event) {
 
         const response = await fetch('delete_all/', {
             method: 'POST',
+            headers: {
+                // 'Content-Type': 'application/json',
+                "X-CSRFToken": getCookie('csrftoken'),
+              },
         });
         const data = await response.json();
 
@@ -185,13 +189,23 @@ async function del_all(event) {
         console.log(data);
 
         // Frontend update
+        const tasklist = document.getElementById('tasklist');
 
 
             // Remove Event listeners
+            tasklist.removeEventListener('keyup', tasknameKeyupHandler);
+    
+            tasklist.removeEventListener('focusout', tasknameBlurHandler);
+    
+            tasklist.removeEventListener('click', delTaskHandler);
+    
+            tasklist.removeEventListener('change', checkboxHandler);
+        
 
-                
-
-            // Removal from the DOM
+            // Remove all child elements from the parent element
+            while (tasklist.firstChild) {
+                tasklist.removeChild(tasklist.firstChild);
+            }
         
 
     } catch(error) {
