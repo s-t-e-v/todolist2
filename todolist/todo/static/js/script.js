@@ -1,5 +1,10 @@
 "use strict";
 
+// Global variable
+
+let enterPressed = false;
+
+
 // Functions
 
 function getCookie(name) {
@@ -110,9 +115,9 @@ function switch_mode() {
     }
 }
 
-async function del_task(event) {
+async function del_task(target) {
 
-    let id = this.id;
+    let id = target.id;
     console.log("Deleting task");
     console.log("id: " + id)
 
@@ -135,9 +140,14 @@ async function del_task(event) {
 
         // Frontend update
         console.log(id);
-        task_id = id.replace('delete_', 'task_')
+        let task_id = id.replace('delete_', 'task_')
 
-        document.getElementById(task_id).remove() // remove the task
+
+            // ( Remove Event listeners )
+
+
+            // Removal from the DOM
+            document.getElementById(task_id).remove() // remove the task
 
 
     } catch(error) {
@@ -165,6 +175,13 @@ async function del_all(event) {
         console.log(data);
 
         // Frontend update
+
+
+            // Remove Event listeners
+
+                
+
+            // Removal from the DOM
         
 
     } catch(error) {
@@ -173,7 +190,7 @@ async function del_all(event) {
 
 }
 
-async function add(enterPressed) {
+async function add() {
 
     let text_entry = document.getElementById("text_entry");
 
@@ -220,8 +237,8 @@ async function add(enterPressed) {
                 input_checkbox.id = "checkbox_" + data["id"];
 
             
-            // Event listener
-            input_checkbox.addEventListener("change", checkstate_update);
+            // // Event listener
+            // input_checkbox.addEventListener("change", checkstate_update);
 
             // Assembly
             checkbox_box.appendChild(input_checkbox);
@@ -238,21 +255,21 @@ async function add(enterPressed) {
                 input_taskname.value = text_entry.value;
 
 
-            // Event listener
+            // // Event listener
 
-                // keyup listener
-                input_taskname.addEventListener('keyup', (event) => {
-                    if (event.key === 'Enter') {
-                    enterPressed = true;
-                    event.target.blur();
-                    }
-                });
+            //     // keyup listener
+            //     input_taskname.addEventListener('keyup', (event) => {
+            //         if (event.key === 'Enter') {
+            //         enterPressed = true;
+            //         event.target.blur();
+            //         }
+            //     });
 
-                // blur listener
-                input_taskname.addEventListener('blur', async (event) => {
-                    await taskname_update(event, enterPressed);
-                    enterPressed = false;
-                });
+            //     // blur listener
+            //     input_taskname.addEventListener('blur', async (event) => {
+            //         await taskname_update(event, enterPressed);
+            //         enterPressed = false;
+            //     });
 
             // Assembly
             taskname_box.appendChild(input_taskname);
@@ -270,8 +287,8 @@ async function add(enterPressed) {
                 del_task_button.hidden = true;
                 del_task_button.innerHTML = "-";
 
-            // Event listener
-            del_task_button.addEventListener("click", del_task);
+            // // Event listener
+            // del_task_button.addEventListener("click", del_task);
 
             
             // Assembly
@@ -294,9 +311,9 @@ async function add(enterPressed) {
     }
 }
 
-async function checkstate_update(event) {
+async function checkstate_update(target) {
 
-    let id = this.id;
+    let id = target.id;
     let checkstate = document.getElementById(id).checked;
 
     console.log("Updating checkstate");
@@ -339,9 +356,9 @@ async function checkstate_update(event) {
 
 }
 
-async function taskname_update (event, enterPressed){
+async function taskname_update (target){
 
-    let id = event.target.id;
+    let id = target.id;
     let taskname = document.getElementById(id);
 
     console.log("task_updating");
@@ -380,7 +397,8 @@ async function taskname_update (event, enterPressed){
         try {
 
         // Database query
-        const response = await fetch(`tasknameup/?id=${id.replace('taskname_','')}`, {            method: 'GET',
+        const response = await fetch(`tasknameup/?id=${id.replace('taskname_','')}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -403,14 +421,11 @@ async function taskname_update (event, enterPressed){
     }
 }
 
-function setupInputListener() {
 
-    let enterPressed = false;
+// Define some of the event listener function
 
-
-    // Individual elements
-
-    document.getElementById("big_button").addEventListener("click", async (event) => {
+    // Big button
+    const bigbuttonhandler = async (event) => {
         let deletion_mode = document.getElementById("trash").checked;
 
         if (deletion_mode) {
@@ -418,76 +433,124 @@ function setupInputListener() {
             await del_all();
         }
         else {
-            await add(enterPressed);
+            await add();
         }
-         
-    });
+        
+    };
 
 
-    document.getElementById("text_entry").addEventListener('keyup', async (event) => {
+
+    // Text entry
+    const textEntryHandler = async (event) => {
         if (event.key === 'Enter') {
-            enterPressed = true;
-            await add(enterPressed);
+            await add();
             event.target.blur();
         }
-    });
+    };
+
+
+    // Taslisk event handler
+
+
+    const tasknameKeyupHandler = (event) => {
+
+        console.log("taskname keyup handling");
+
+        // Determine the target element of the keyup event
+        const target = event.target;
+
+        console.log(target);
+
+
+        // Handle the keyup event based on the target element
+        if (target.className === 'taskname') {
+            if (event.key === 'Enter') {
+                enterPressed = true;
+                target.blur();
+                console.log("enterPressed:" + enterPressed)
+            }
+        }
+  
+    };
+
+    const tasknameBlurHandler = async (event) => { 
+
+        console.log("taskname Blur handling");
+
+
+        // Determine the target element of the blur event
+        const target = event.target;
+
+        console.log(target);
+        console.log("enterPressed:" + enterPressed)
+
+        // Handle the blur event based on the target element
+        if (target.className === 'taskname') {
+            await taskname_update(target);
+            enterPressed = false;
+        }
+
+    };
+
+    const delTaskHandler = (event) => {
+        // Determine the target element of the blur event
+        const target = event.target;
+
+        // Handle the blur event based on the target element
+        if (target.className === 'del_task') {
+            del_task(target);
+        }
+    };
+
+
+    const checkboxHandler = (event) => {
+        // Determine the target element of the blur event
+        const target = event.target;
+
+        // Handle the change event based on the target element
+        if (target.className === 'checkbox') {
+            checkstate_update(target);
+        }
+    }
+
+
+
+ // line-through
+
+ let taskname_list = document.getElementsByClassName("taskname");
+
+ for (let i = 0; i < taskname_list.length; i++) { // Loop over the collection of elements and assign event listener
+
+
+     let check_id = taskname_list[i].id.replace('taskname_', 'checkbox_');
+     let checked = document.getElementById(check_id).checked;
+
+     if (checked) {
+         taskname_list[i].style.textDecoration = 'line-through';
+     }
+ }
+
+// Event listenner attachment
+
+    // Individual elements
+
+    document.getElementById("big_button").addEventListener("click", bigbuttonhandler);
+
+    document.getElementById("text_entry").addEventListener('keyup', textEntryHandler);
 
     document.getElementById("trash").addEventListener("click", switch_mode);
 
 
     // Set elements
 
-        // taskname_list
-        let taskname_list = document.getElementsByClassName("taskname");
+        // tasklist
 
-        for (let i = 0; i < taskname_list.length; i++) { // Loop over the collection of elements and assign event listener
+        let tasklist = document.getElementById('tasklist');
 
-            // keyup listener
-            taskname_list[i].addEventListener('keyup', (event) => {
-                if (event.key === 'Enter') {
-                enterPressed = true;
-                event.target.blur();
-                }
-            });
+        tasklist.addEventListener('keyup', tasknameKeyupHandler);
 
-            // blur listener
-            taskname_list[i].addEventListener('blur', async (event) => {
-                await taskname_update(event, enterPressed);
-                enterPressed = false;
-            });
-            
+        tasklist.addEventListener('focusout', tasknameBlurHandler);
 
-            // line-through
-            let check_id = taskname_list[i].id.replace('taskname_', 'checkbox_');
-            let checked = document.getElementById(check_id).checked;
+        tasklist.addEventListener('click', delTaskHandler);
 
-            if (checked) {
-                taskname_list[i].style.textDecoration = 'line-through';
-            }
-        }
-
-
-        // del_task buttons
-        let del_task_buttons = document.getElementsByClassName("del_task");
-
-        for (let i = 0; i < del_task_buttons.length; i++) { // Loop over the collection of elements and assign event listener
-            del_task_buttons[i].addEventListener("click", del_task);
-            console.log(del_task_buttons[i].id);
-        }
-
-        // checkboxes
-        let checkboxes = document.getElementsByClassName("checkbox");
-
-
-        for (let i = 0; i < checkboxes.length; i++) { // Loop over the collection of elements and assign event listener
-            checkboxes[i].addEventListener("change", checkstate_update);
-            console.log(checkboxes[i].id);
-        }
-
-
-}
-
-
-// Event listener attachment
-setupInputListener()
-
+        tasklist.addEventListener('change', checkboxHandler);
