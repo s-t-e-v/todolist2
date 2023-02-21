@@ -147,16 +147,35 @@ async function del_task(event) {
 
 }
 
+async function del_all(event) {
+    
+
+    console.log("Delete all");
+
+
+    try {
+        // Database update
+
+        const response = await fetch('delete_all/', {
+            method: 'POST',
+        });
+        const data = await response.json();
+
+        // Do something with the data
+        console.log(data);
+
+        // Frontend update
+        
+
+    } catch(error) {
+        console.error(error);
+    }
+
+}
+
 async function add(enterPressed) {
 
     let text_entry = document.getElementById("text_entry");
-    let deletion_mode = document.getElementById("trash").checked;
-
-    console.log("deletion mode: " + deletion_mode)
-
-    if (deletion_mode)  {
-        return 0;
-    }
 
     if (text_entry.value == "") {
         return 0;
@@ -391,7 +410,18 @@ function setupInputListener() {
 
     // Individual elements
 
-    document.getElementById("big_button").addEventListener("click", add);
+    document.getElementById("big_button").addEventListener("click", async (event) => {
+        let deletion_mode = document.getElementById("trash").checked;
+
+        if (deletion_mode) {
+            console.log("deletion mode: " + deletion_mode)
+            await del_all();
+        }
+        else {
+            await add(enterPressed);
+        }
+         
+    });
 
 
     document.getElementById("text_entry").addEventListener('keyup', async (event) => {
