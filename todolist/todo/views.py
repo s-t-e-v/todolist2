@@ -9,6 +9,8 @@ from django.db import connection
 import json
 # Create your views here.
 
+# --------------- Normal mode --------------- #
+
 def index(request):
 
     todo = Todo.objects.all()
@@ -69,7 +71,7 @@ def taskname_update(request):
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
     
 
-# deletion mode
+# --------------- Deletion mode --------------- #
 
 def delete(request):
     """Delete the selected entry.
@@ -94,15 +96,19 @@ def delete_all(request):
         Todo.objects.all().delete()
 
         # reset index
-
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM sqlite_sequence WHERE name='todo_todo'")
+        # -> this should happen when switch off the deletion mode, a dedicated view should be created
+        # with connection.cursor() as cursor:
+        #     cursor.execute("DELETE FROM sqlite_sequence WHERE name='todo_todo'")
 
         return JsonResponse({'sucess': True})
     else:
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
 
 
+# reset index
+def reset_index(request):
+    """Reset index when every task are deleted and the deletion is confirmed"""
+    pass
 
 def undo(request):
     """Undo the previous action.

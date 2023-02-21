@@ -23,6 +23,19 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function notasks() {
+    const tasks = document.querySelectorAll('#tasklist .task');
+
+    console.log(tasks.length);
+
+    if (tasks.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 function switch_mode() {
 
 
@@ -73,12 +86,14 @@ function switch_mode() {
             // Disable entry bar
             entrybar.disabled = true;
 
-            // Change button to "-"
-            bigbutton.innerHTML = "-";
+            // Change button to "-" & hide button if notasks
+            if (notasks()) {
+                bigbutton.hidden = true;
+            }
+            bigbutton.innerHTML = "-";   
 
             // Display undo button
             undo.hidden = false;
-
 
     }
     else {
@@ -107,6 +122,10 @@ function switch_mode() {
             entrybar.disabled = false;
 
             // Change button to "+"
+            if (bigbutton.hidden) {
+                bigbutton.hidden = false;
+            }
+
             bigbutton.innerHTML = "+";
 
             // Hide undo button
@@ -117,7 +136,12 @@ function switch_mode() {
 
 async function del_task(target) {
 
+    // retrieve id of the target button
     let id = target.id;
+
+     // retrieve big button
+     let bigbutton = document.getElementById("big_button");
+
     console.log("Deleting task");
     console.log("id: " + id)
     console.time();
@@ -155,6 +179,14 @@ async function del_task(target) {
             // Removal from the DOM
             document.getElementById(task_id).remove() // remove the task
 
+
+
+            // hide button if notasks
+            if (notasks()) {
+                bigbutton.hidden = true;
+            }
+
+
         console.timeEnd();
         console.log('Front removal ends!');
 
@@ -169,6 +201,9 @@ async function del_task(target) {
 
 async function del_all(event) {
     
+
+    // retrieve big button
+    let bigbutton = document.getElementById("big_button");
 
     console.log("Delete all");
 
@@ -190,22 +225,15 @@ async function del_all(event) {
 
         // Frontend update
         const tasklist = document.getElementById('tasklist');
-
-
-            // Remove Event listeners
-            tasklist.removeEventListener('keyup', tasknameKeyupHandler);
-    
-            tasklist.removeEventListener('focusout', tasknameBlurHandler);
-    
-            tasklist.removeEventListener('click', delTaskHandler);
-    
-            tasklist.removeEventListener('change', checkboxHandler);
         
 
             // Remove all child elements from the parent element
             while (tasklist.firstChild) {
                 tasklist.removeChild(tasklist.firstChild);
             }
+
+            // hide button because there is no tasks
+            bigbutton.hidden = true;
         
 
     } catch(error) {
@@ -260,9 +288,6 @@ async function add() {
                 input_checkbox.name = "checkbox";
                 input_checkbox.id = "checkbox_" + data["id"];
 
-            
-            // // Event listener
-            // input_checkbox.addEventListener("change", checkstate_update);
 
             // Assembly
             checkbox_box.appendChild(input_checkbox);
@@ -279,22 +304,6 @@ async function add() {
                 input_taskname.value = text_entry.value;
 
 
-            // // Event listener
-
-            //     // keyup listener
-            //     input_taskname.addEventListener('keyup', (event) => {
-            //         if (event.key === 'Enter') {
-            //         enterPressed = true;
-            //         event.target.blur();
-            //         }
-            //     });
-
-            //     // blur listener
-            //     input_taskname.addEventListener('blur', async (event) => {
-            //         await taskname_update(event, enterPressed);
-            //         enterPressed = false;
-            //     });
-
             // Assembly
             taskname_box.appendChild(input_taskname);
 
@@ -310,10 +319,6 @@ async function add() {
                 del_task_button.id = "delete_" + data["id"];
                 del_task_button.hidden = true;
                 del_task_button.innerHTML = "-";
-
-            // // Event listener
-            // del_task_button.addEventListener("click", del_task);
-
             
             // Assembly
             del_task_box.appendChild(del_task_button);
