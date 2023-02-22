@@ -3,11 +3,17 @@
 // Global variable
 
 let enterPressed = false;
-let history;
+let history = [];
 
 
 // Functions
 
+
+/**
+ * Retrieves the value of a cookie with the specified name.
+ * @param {string} name - The name of the cookie to retrieve.
+ * @returns {?string} - The value of the cookie, or null if the cookie was not found.
+ */
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -33,7 +39,9 @@ function notasks() {
 
     console.log(tasks.length);
 
-    if (tasks.length === 0) {
+    if (tasks.length === 0) { // If there is no element inside tasks list
+        return true;
+    } else if (history.length === tasks.length) {// If all elements in the history array are in the tasks list
         return true;
     } else {
         return false;
@@ -508,14 +516,62 @@ async function taskname_update (target){
 
 // History
 
-function update_history (target=none) {
+function update_history (target=null) {
     // This function creates a color
 
     // Should dynamically hide big button if no more task
 
+    let bigbutton = document.getElementById("big_button");
 
-    // retrieve id of the target
-    let id = target.id;
+
+
+    if (target) { // saving the deleted task into history
+
+        console.log("delete single task -> history");
+        // retrieve id of the target
+        let id = target.id;
+
+        // pushing the task deleted into the history
+        history.push(
+            {
+                deletion: "individual",
+                task: {
+                    id: id.replace('delete_', ''),
+                    checkstate: document.getElementById(id.replace('delete_', 'checkbox_')).checked,
+                    taskname: document.getElementById(id.replace('delete_', 'taskname_')).value,
+                },
+            }
+        );
+
+
+        console.log("History: ");
+        console.dir(history);
+
+        // Updating Frontend
+
+        let task_id = id.replace('delete_', 'task_')
+
+            // Hiding task from the DOM
+            document.getElementById(task_id).style.display = "none"; // hide task
+
+
+
+            // hide button if notasks
+            if (notasks()) {
+                bigbutton.hidden = true;
+            }
+
+
+
+
+    }
+    else { // saving all the deleted tasks into history
+        console.log("delete all task -> history");
+
+    }
+
+
+
 
     //
 
@@ -625,15 +681,17 @@ function update_history (target=none) {
 
     /**
      * Handles the 'click' events on the targeted delete task button. As a result of this event:
+     *     - the function update_history() is called
      * @param {*} event - The event element related to the targeted delete task button.
      */
-    const delTaskHandler = async (event) => {
+    const delTaskHandler = (event) => {
         // Determine the target element of the blur event
         const target = event.target;
 
-        // Handle the blur event based on the target element
+        // Handle the click event based on the target element
         if (target.className === 'del_task') {6
-            await del_task(target);
+            // await del_task(target);
+            update_history(target);
         }
     };
 
