@@ -3,6 +3,7 @@
 // Global variable
 
 let enterPressed = false;
+let history;
 
 
 // Functions
@@ -448,6 +449,17 @@ async function taskname_update (target){
         }
 
     }
+}
+
+
+// History
+
+function update_history (event) {
+    // This function creates a color
+
+    
+    
+
 }
 
 
