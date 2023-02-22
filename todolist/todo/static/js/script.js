@@ -24,6 +24,10 @@ function getCookie(name) {
     return cookieValue;
 }
 
+/**
+ * Tells whether there are tasks or not inside the todolist
+ * @returns {Boolean} - True if no tasks, False otherwise
+ */
 function notasks() {
     const tasks = document.querySelectorAll('#tasklist .task');
 
@@ -37,6 +41,16 @@ function notasks() {
 
 }
 
+
+/**
+ * Switch the App display between 'normal mode' & 'deletion mode'
+ *     - normal mode:
+ *         - ✓ Enables adding & changing features
+ *         - ⨯ Disables deleting features
+ *     - deletion mode:
+ *         - ✓ Enables deleting features
+ *         - ⨯ Disables adding & changing features
+ */
 function switch_mode() {
 
 
@@ -61,6 +75,8 @@ function switch_mode() {
         // retrieve big button
         let bigbutton = document.getElementById("big_button");
 
+
+    // Testing switch mode check state
     if (switch_mode_button.checked) {
         console.log("deletion mode");
 
@@ -135,13 +151,21 @@ function switch_mode() {
     }
 }
 
+/**
+ * Delete the targeted task in the database (Django model - SQLite3)
+ * 
+ * A 'POST' request is done to the server. The id of the task transfered, in order to select the task to delete
+ * csrftoken has to be transfered as well on Firefox. Crashes on Google Chrome. 
+ * @async
+ * @param {EventTarget} target - The targeted delete buttons, contains the element information, especially its id
+ */
 async function del_task(target) {
 
     // retrieve id of the target button
     let id = target.id;
 
-     // retrieve big button
-     let bigbutton = document.getElementById("big_button");
+    //  // retrieve big button
+    //  let bigbutton = document.getElementById("big_button");
 
     console.log("Deleting task");
     console.log("id: " + id)
@@ -167,29 +191,29 @@ async function del_task(target) {
         // Do something with the data
         console.log(data);
 
-        console.log('Front removal starts!');
-        console.time();
-        // Frontend update
-        console.log(id);
-        let task_id = id.replace('delete_', 'task_')
+        // console.log('Front removal starts!');
+        // console.time();
+        // // Frontend update
+        // console.log(id);
+        // let task_id = id.replace('delete_', 'task_')
 
 
-            // ( Remove Event listeners )
+        //     // ( Remove Event listeners )
 
 
-            // Removal from the DOM
-            document.getElementById(task_id).remove() // remove the task
+        //     // Removal from the DOM
+        //     document.getElementById(task_id).remove() // remove the task
 
 
 
-            // hide button if notasks
-            if (notasks()) {
-                bigbutton.hidden = true;
-            }
+        //     // hide button if notasks
+        //     if (notasks()) {
+        //         bigbutton.hidden = true;
+        //     }
 
 
-        console.timeEnd();
-        console.log('Front removal ends!');
+        // console.timeEnd();
+        // console.log('Front removal ends!');
 
 
 
@@ -200,11 +224,19 @@ async function del_task(target) {
 
 }
 
-async function del_all(event) {
+/**
+ * Delete all task elements in the database (Django model - SQLite3).
+ * 
+ * A 'POST' request is done to the server.
+ * The task id autoincrement in the database is reset in the backend.
+ * csrftoken has to be transfered as well on Firefox. Crashes on Google Chrome. 
+ * @async
+ */
+async function del_all() {
     
 
     // retrieve big button
-    let bigbutton = document.getElementById("big_button");
+    // let bigbutton = document.getElementById("big_button");
 
     console.log("Delete all");
 
@@ -224,17 +256,17 @@ async function del_all(event) {
         // Do something with the data
         console.log(data);
 
-        // Frontend update
-        const tasklist = document.getElementById('tasklist');
+        // // Frontend update
+        // const tasklist = document.getElementById('tasklist');
         
 
-            // Remove all child elements from the parent element
-            while (tasklist.firstChild) {
-                tasklist.removeChild(tasklist.firstChild);
-            }
+        //     // Remove all child elements from the parent element
+        //     while (tasklist.firstChild) {
+        //         tasklist.removeChild(tasklist.firstChild);
+        //     }
 
-            // hide button because there is no tasks
-            bigbutton.hidden = true;
+        //     // hide button because there is no tasks
+        //     bigbutton.hidden = true;
         
 
     } catch(error) {
@@ -243,6 +275,10 @@ async function del_all(event) {
 
 }
 
+/**
+ * Add a task to the database (Django model - SQLite3) & update the frontend accordingly
+ * @returns {Number} 0 - If there is nothing is the entry bar in order to exit the function directly
+ */
 async function add() {
 
     let text_entry = document.getElementById("text_entry");
@@ -341,6 +377,13 @@ async function add() {
     }
 }
 
+/**
+ * Update the checkstate of a task in the database (Django model - SQLite3).
+ * 
+ * @async
+ * When a checkbox is checked, a line-through is put on the associated input text containing the task name
+ * @param {EventTarget} target - The targeted checkbox, contains its id
+ */
 async function checkstate_update(target) {
 
     let id = target.id;
@@ -386,6 +429,17 @@ async function checkstate_update(target) {
 
 }
 
+/**
+ * This function serves two purposes:
+ *     1. Updating the task name targeted in the database (Django model - SQLite3) when a modification occured on the targeted task bar with the pressing of the Enter key
+ *     2. Display back the original name of the targeted task if modification wasn't confirm by Enter key stroke.
+ * 
+ * - A 'POST' request is done for the first case. The id and the new taskname is transfered to the backend.
+ * - A 'GET' request is done for the second case.
+ * 
+ * @async
+ * @param {EventTarget} target - The targeted text input, contains the element information, especially the task name and its id
+ */
 async function taskname_update (target){
 
     let id = target.id;
@@ -454,24 +508,40 @@ async function taskname_update (target){
 
 // History
 
-function update_history (event) {
+function update_history (target=none) {
     // This function creates a color
 
-    
+    // Should dynamically hide big button if no more task
+
+
+    // retrieve id of the target
+    let id = target.id;
+
+    //
+
+
     
 
 }
 
 
-// Define some of the event listener function
+// Defination of some event handler functions
 
     // Big button
-    const bigbuttonhandler = async (event) => {
+    
+    /**
+     * Handles the 'click' events on the big button
+     *     - When on normal mode, the async function add() is called
+     *     - When on deletion mode, the function update_history() is called
+     */
+    const bigbuttonhandler = async () => {
         let deletion_mode = document.getElementById("trash").checked;
 
         if (deletion_mode) {
             console.log("deletion mode: " + deletion_mode)
-            await del_all();
+            // await del_all();
+
+            update_history();
         }
         else {
             await add();
@@ -482,6 +552,13 @@ function update_history (event) {
 
 
     // Text entry
+
+    /**
+     * Handles the "keyup" events on the big button. If the key pressed was 'Enter', then the async function add() is called.
+     * 
+     * After the task added, the entry bar is focused out ('blur').
+     * @param {Event} event - The event element related to the text entry bar
+     */
     const textEntryHandler = async (event) => {
         if (event.key === 'Enter') {
             await add();
@@ -492,7 +569,14 @@ function update_history (event) {
 
     // Taslisk event handler
 
-
+    /**
+     * Handles the "keyup" events on the targeted task name text input.
+     * 
+     * If the key pressed was 'Enter',
+     *     - the global Boolean 'enterPressed' is set to true
+     *     - the task name text input is focused out ('blur').
+     * @param {Event} event - The event element related to the targeted task name text input.
+     */
     const tasknameKeyupHandler = (event) => {
 
         console.log("taskname keyup handling");
@@ -514,6 +598,12 @@ function update_history (event) {
   
     };
 
+    /**
+     * Handles the 'blur' events on the targeted task name text input. As a result of this event:
+     *     - the async function taskname_update() is called
+     *     - the global Boolean enterPressed is reset to false right after
+     * @param {Event} event - The event element related to the targeted task name text input.
+     */
     const tasknameBlurHandler = async (event) => { 
 
         console.log("taskname Blur handling");
@@ -533,24 +623,33 @@ function update_history (event) {
 
     };
 
-    const delTaskHandler = (event) => {
+    /**
+     * Handles the 'click' events on the targeted delete task button. As a result of this event:
+     * @param {*} event - The event element related to the targeted delete task button.
+     */
+    const delTaskHandler = async (event) => {
         // Determine the target element of the blur event
         const target = event.target;
 
         // Handle the blur event based on the target element
-        if (target.className === 'del_task') {
-            del_task(target);
+        if (target.className === 'del_task') {6
+            await del_task(target);
         }
     };
 
 
-    const checkboxHandler = (event) => {
+    /**
+     * Handles the 'change' events on the targeted checkbox. As a result of this event:
+     *     - the async function checkstate_update() is called     * 
+     * @param {Event} event - The event element related to the targeted checkbox.
+     */
+    const checkboxHandler = async (event) => {
         // Determine the target element of the blur event
         const target = event.target;
 
         // Handle the change event based on the target element
         if (target.className === 'checkbox') {
-            checkstate_update(target);
+            await checkstate_update(target);
         }
     }
 
