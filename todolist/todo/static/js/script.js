@@ -563,10 +563,53 @@ function update_history (target=null) {
 
 
 
-
     }
     else { // saving all the deleted tasks into history
         console.log("delete all task -> history");
+
+        // Selecting task elements which are currently displayed
+        let tasks = document.getElementsByClassName("task");
+
+        let task_id_list = [];
+        let id;
+        let task_displayed;
+
+         // pushing all the tasks deleted into the history
+         for (var i = 0; i < tasks.length; i++) {
+
+            id = tasks[i].id;
+
+            task_displayed = tasks[i].style.display;
+
+            if (task_displayed != 'none') {
+                history.push(
+                    {
+                        deletion: "multiple",
+                        id: id,
+                    }
+                 );
+            }
+
+             task_id_list.push(id);
+         }
+
+        console.log("History: ");
+        console.dir(history);
+
+        // Updating Frontend
+
+            // Hiding task from the DOM
+            for (var i = 0; i < task_id_list.length; i++) {
+                document.getElementById(task_id_list[i]).style.display = "none"; // hide task
+            }
+
+
+            // hide button because no tasks displayed
+            // hide button if notasks
+            if (notasks()) {
+                bigbutton.hidden = true;
+            }
+        
 
     }
 
