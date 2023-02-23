@@ -634,6 +634,68 @@ function update_history (target=null) {
 
 function undo() {
     console.log("Undoing");
+
+    if (history.length === 0) {// If no history, no need to continue furthermore
+        console.log("Nothing to undo");
+        return 0;
+    }
+
+    // retrieve big button
+    let bigbutton = document.getElementById("big_button");
+
+    if (history[0].deletion === "multiple") { // If all tasks remaining has been virtually deleted
+        console.log("Multiple actions to undo at once");
+
+        let task_id;
+
+
+        while (history[0].deletion === "multiple") {
+            
+            // Saving the current id
+            task_id = history[0].id;
+
+            // Deleting from history
+            history.shift();
+
+            // Updating frontend
+
+                // display back task
+                document.getElementById(task_id).style.display = "flex";
+
+
+            if (history.length === 0)
+                break;
+
+        }
+
+        // Display back button "-" if necessary
+        if (bigbutton.hidden) {
+            bigbutton.hidden = false;
+        }
+    } else {
+        console.log("Single action to undo at once");
+
+        let task_id;
+
+        // Saving the first id in the history pile
+        task_id = "task_" + history[0].id;
+
+        // Deleting from history
+        history.shift();
+
+        // Updating frontend
+
+            // display back task
+            document.getElementById(task_id).style.display = "flex";
+
+            // Display back button "-" if necessary
+            if (bigbutton.hidden) {
+                bigbutton.hidden = false;
+            }
+
+    }
+
+    console.dir(history);
 }
 
 
@@ -793,6 +855,8 @@ function undo() {
     document.getElementById("text_entry").addEventListener('keyup', textEntryHandler);
 
     document.getElementById("trash").addEventListener("click", switch_mode);
+
+    document.getElementById("undo").addEventListener("click", undo);
 
 
     // Set elements
