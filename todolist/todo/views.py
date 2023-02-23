@@ -78,10 +78,13 @@ def delete(request):
         update_history will be called"""
     
     if request.method == 'POST':
-        body = json.loads(request.body)
-        id = body.get('id', '')
+        tasks = json.loads(request.body)
 
-        Todo.objects.filter(id=id).delete()
+        print(tasks)
+
+        for t in tasks:
+            Todo.objects.get(id=t['id']).delete()
+
         return JsonResponse({'sucess': True})
     else:
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
@@ -96,19 +99,14 @@ def delete_all(request):
         Todo.objects.all().delete()
 
         # reset index
-        # -> this should happen when switch off the deletion mode, a dedicated view should be created
-        # with connection.cursor() as cursor:
-        #     cursor.execute("DELETE FROM sqlite_sequence WHERE name='todo_todo'")
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name='todo_todo'")
 
         return JsonResponse({'sucess': True})
     else:
         return JsonResponse({'sucess': False, 'error': 'Invalid request method'})
 
 
-# reset index
-def reset_index(request):
-    """Reset index when every task are deleted and the deletion is confirmed"""
-    pass
 
 def undo(request):
     """Undo the previous action.

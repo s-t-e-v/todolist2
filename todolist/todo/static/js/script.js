@@ -59,7 +59,7 @@ function notasks() {
  *         - ✓ Enables deleting features
  *         - ⨯ Disables adding & changing features
  */
-function switch_mode() {
+async function switch_mode() {
 
 
     // Get swith mode button
@@ -124,6 +124,23 @@ function switch_mode() {
     else {
         console.log("normal mode");
 
+
+        // Deletion database update  + frontend update accordingly
+        if (history.length > 0) { // there are some tasks to delete from the database
+
+            console.log('deleting history data');
+
+            if (history[0].deletion === 'multiple') {
+                await del_all();// delete all tasks in the database and remove them from the front
+            } else {
+                await del_tasks();// delete the tasks inside the history back/front end
+            }
+
+            // history array reset
+            history = [];
+
+        }
+
          // Change set elements
 
             // Hide del button
@@ -160,23 +177,18 @@ function switch_mode() {
 }
 
 /**
- * Delete the targeted task in the database (Django model - SQLite3)
+ * Delete the targeted task(s) in the database (Django model - SQLite3). The tasks are also removed from the front.
  * 
  * A 'POST' request is done to the server. The id of the task transfered, in order to select the task to delete
  * csrftoken has to be transfered as well on Firefox. Crashes on Google Chrome. 
  * @async
- * @param {EventTarget} target - The targeted delete buttons, contains the element information, especially its id
  */
-async function del_task(target) {
-
-    // retrieve id of the target button
-    let id = target.id;
+async function del_tasks() {
 
     //  // retrieve big button
     //  let bigbutton = document.getElementById("big_button");
 
-    console.log("Deleting task");
-    console.log("id: " + id)
+    console.log("Deleting tasks");
     console.time();
 
     try {
@@ -187,7 +199,7 @@ async function del_task(target) {
                 'Content-Type': 'application/json',
                 "X-CSRFToken": getCookie('csrftoken'),
             },
-            body: JSON.stringify({"id": id.replace('delete_', '')}),
+            body: JSON.stringify(history),
 
         });
         const data = await response.json();
@@ -199,29 +211,26 @@ async function del_task(target) {
         // Do something with the data
         console.log(data);
 
-        // console.log('Front removal starts!');
-        // console.time();
-        // // Frontend update
-        // console.log(id);
-        // let task_id = id.replace('delete_', 'task_')
+        console.log('Front removal starts!');
+        console.time();
+        // Frontend update
+
+            // Removal from the DOM
+            let task_id;
+
+            for(let i = 0; i < history.length; i++) {// loop over all deleted elements
+                task_id = 'task_' + history[i].id;
+                document.getElementById(task_id).remove() // remove the task
+            }
+
+            // // hide button if notasks
+            // if (notasks()) {
+            //     bigbutton.hidden = true;
+            // }
 
 
-        //     // ( Remove Event listeners )
-
-
-        //     // Removal from the DOM
-        //     document.getElementById(task_id).remove() // remove the task
-
-
-
-        //     // hide button if notasks
-        //     if (notasks()) {
-        //         bigbutton.hidden = true;
-        //     }
-
-
-        // console.timeEnd();
-        // console.log('Front removal ends!');
+        console.timeEnd();
+        console.log('Front removal ends!');
 
 
 
@@ -233,7 +242,7 @@ async function del_task(target) {
 }
 
 /**
- * Delete all task elements in the database (Django model - SQLite3).
+ * Delete all task elements in the database (Django model - SQLite3). The tasks are also removed from the front 
  * 
  * A 'POST' request is done to the server.
  * The task id autoincrement in the database is reset in the backend.
@@ -264,14 +273,14 @@ async function del_all() {
         // Do something with the data
         console.log(data);
 
-        // // Frontend update
-        // const tasklist = document.getElementById('tasklist');
+        // Frontend update
+        const tasklist = document.getElementById('tasklist');
         
 
-        //     // Remove all child elements from the parent element
-        //     while (tasklist.firstChild) {
-        //         tasklist.removeChild(tasklist.firstChild);
-        //     }
+            // Remove all child elements from the parent element
+            while (tasklist.firstChild) {
+                tasklist.removeChild(tasklist.firstChild);
+            }
 
         //     // hide button because there is no tasks
         //     bigbutton.hidden = true;
@@ -532,14 +541,12 @@ function update_history (target=null) {
         let id = target.id;
 
         // pushing the task deleted into the history
-        history.push(
+        history.unshift(
             {
                 deletion: "individual",
-                task: {
-                    id: id.replace('delete_', ''),
-                    checkstate: document.getElementById(id.replace('delete_', 'checkbox_')).checked,
-                    taskname: document.getElementById(id.replace('delete_', 'taskname_')).value,
-                },
+                id: id.replace('delete_', ''), // id for the backend
+                // 'taskname' is for debugging purpose, to comment/delete when ok
+                taskname: document.getElementById(id.replace('delete_', 'taskname_')).value,
             }
         );
 
@@ -575,22 +582,22 @@ function update_history (target=null) {
         let task_displayed;
 
          // pushing all the tasks deleted into the history
-         for (var i = 0; i < tasks.length; i++) {
+         for (let i = 0; i < tasks.length; i++) {
 
             id = tasks[i].id;
 
             task_displayed = tasks[i].style.display;
 
             if (task_displayed != 'none') {
-                history.push(
+                history.unshift(
                     {
                         deletion: "multiple",
-                        id: id,
+                        id: id,// id for the frontend
                     }
                  );
             }
 
-             task_id_list.push(id);
+             task_id_list.unshift(id);
          }
 
         console.log("History: ");
@@ -599,7 +606,7 @@ function update_history (target=null) {
         // Updating Frontend
 
             // Hiding task from the DOM
-            for (var i = 0; i < task_id_list.length; i++) {
+            for (let i = 0; i < task_id_list.length; i++) {
                 document.getElementById(task_id_list[i]).style.display = "none"; // hide task
             }
 
@@ -621,6 +628,12 @@ function update_history (target=null) {
 
     
 
+}
+
+// Undo
+
+function undo() {
+    console.log("Undoing");
 }
 
 
