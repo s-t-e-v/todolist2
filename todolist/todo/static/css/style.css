@@ -150,7 +150,34 @@ h1 {
             height: 100%;
 
             font-size: 1.5em;
+
+            /* border: none;
+            text-decoration: none; */
+
+            /* background-image: url("../img/plus/plus_normal.svg"); */
+            /* background-size: cover; */
+
+            
         }
+
+        /* #big_button:hover {
+            background-image: url("../img/plus/plus_hover.svg");
+            background-size: cover;
+
+
+            border: none;
+            text-decoration: none;
+
+        }
+
+        #big_button:active {
+            background-image: url("../img/plus/plus_mousedown.svg");
+            background-size: cover;
+
+
+            border: none;
+            text-decoration: none;
+        } */
 
 
 /* Task list */
