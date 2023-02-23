@@ -101,7 +101,7 @@ main {
 /* H1 */
 h1 {
     text-align: center;
-    margin: 35px 0;
+    margin: 90px 0 35px 0;
 
     font-size: 2.6em;
 }
@@ -208,3 +208,26 @@ h1 {
                     font-size: 1.2em;
 
                 }
+
+
+@media screen and (min-width:400px){
+
+    main {
+        width: 80%;
+    }
+
+    .taskname_box, .text_entry_box {
+        flex-grow: 1;
+    }
+
+    .text_entry_box {
+        margin-left: 50px;
+    }
+    
+}
+
+@media screen and (min-width:1000px){
+    main {
+        width: 800px;
+    }
+}
